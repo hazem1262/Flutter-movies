@@ -13,15 +13,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
       home: MoviesList(),
@@ -34,25 +25,32 @@ class MoviesList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: FutureBuilder(
+        body: FutureBuilder<Movies>(
             future: getAllMovies(),
             builder: (context, snapshot){
               if(snapshot.connectionState == ConnectionState.done){
                 return ListView.builder(
                     padding: EdgeInsetsDirectional.only(top: 10, start: 10, bottom: 10,end: 10 ),
-                    itemCount: ((snapshot.data.results) as List<Result>).length,
+                    itemCount: snapshot.data.results.length,
                     itemBuilder: (innerContext, position){
-                      return drawMovie(((snapshot.data.results) as List<Result>)[position], context);
+                      return drawMovie((snapshot.data.results)[position], context);
                     }
                 );
               }else {
-                return CircularProgressIndicator();
+                return Center(child: CircularProgressIndicator());
               }
             }
         ),
+        floatingActionButton: FloatingActionButton(onPressed:  (){
+          _navigateAndDisplaySelection(context);
+        }),
       ),
     );
   }
+
+  
+}
+
   Future<Movies> getAllMovies() async{
     final url = "https://api.themoviedb.org/3/discover/movie?api_key=96eee189d8f440bae690d17f36e9f700&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1";
     final response = await http.get(url);
@@ -107,31 +105,4 @@ class MoviesList extends StatelessWidget {
   }
 }
 
-/*class _MoviesListState extends State<MoviesList> {
-  @override
-  Widget build(BuildContext context) {
-    getAllMovies();
-    return SafeArea(
-      child: Scaffold(
-        body: FutureBuilder(
-          future: getAllMovies(),
-            builder: (context, snapshot){
-              if(snapshot.connectionState == ConnectionState.done){
-                return ListView.builder(
-                  padding: EdgeInsetsDirectional.only(top: 10, start: 10, bottom: 10,end: 10 ),
-                  itemCount: ((snapshot.data.results) as List<Result>).length,
-                  itemBuilder: (context, position){
-                    return drawMovie(((snapshot.data.results) as List<Result>)[position]);
-                  }
-                );
-              }else {
-                return CircularProgressIndicator();
-              }
-            }
-        ),
-      ),
-    );
-  }
-  
 
-}*/
