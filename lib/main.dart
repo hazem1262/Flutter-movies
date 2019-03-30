@@ -3,7 +3,6 @@ import 'package:flutter_app2/movie_details.dart';
 import 'package:flutter_app2/movies.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
-import 'dart:io';
 
 void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
@@ -16,6 +15,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: MoviesList(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -40,15 +40,13 @@ class MoviesList extends StatelessWidget {
                 return Center(child: CircularProgressIndicator());
               }
             }
-        ),
-        floatingActionButton: FloatingActionButton(onPressed:  (){
-          _navigateAndDisplaySelection(context);
-        }),
+        )
       ),
     );
   }
 
-  
+
+
 }
 
   Future<Movies> getAllMovies() async{
@@ -103,6 +101,6 @@ class MoviesList extends StatelessWidget {
       ),
     );
   }
-}
+
 
 
